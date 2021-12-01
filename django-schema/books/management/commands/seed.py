@@ -17,6 +17,6 @@ class Command(BaseCommand):
 
         seeder = Seed.seeder(locale="en_CA")
 
-        seeder.add_entity(Book, 10)
+        seeder.add_entity(Book, 100)
 
         seeder.execute()
