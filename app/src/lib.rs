@@ -1,5 +1,4 @@
 mod app;
-mod schema;
 
 use wasm_bindgen::prelude::*;
 

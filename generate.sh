@@ -1,5 +1,5 @@
 #!/bin/bash
 
-rm -rf app/src/schema/
-sea-orm-cli generate entity -o app/src/schema/ --tables \
+rm -rf backend/src/schema/
+sea-orm-cli generate entity -o backend/src/schema/ --tables \
     books_book
