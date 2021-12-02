@@ -2704,6 +2704,7 @@ dependencies = [
 name = "rusty-bookstore-schema"
 version = "0.1.0"
 dependencies = [
+ "rust_decimal",
  "sea-orm",
  "serde",
 ]

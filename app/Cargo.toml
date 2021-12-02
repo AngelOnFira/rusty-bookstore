@@ -32,7 +32,7 @@ reqwasm = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 wasm-bindgen-futures = "0.4"
 
-rusty-bookstore-schema = { path = "../rusty-bookstore-schema" }
+rusty-bookstore-schema = { path = "../rusty-bookstore-schema", features = ["frontend"] }
 getrandom = { version = "=0.2.3", features = ["js"] }
 indexmap = "=1.6.2"
 

@@ -13,9 +13,11 @@ edition = "2021"
 # name = "bin"
 # path = "src/main.rs"
 
+
+
 [dependencies]
 sea-orm = { version = "^0", features = [ "runtime-tokio-rustls", "macros", "with-chrono", "sqlx-postgres" ], default-features = false }
 tokio = { version = "1", features = ["full"] }
 warp = "0.3"
 
-rusty-bookstore-schema = { path = "../rusty-bookstore-schema" }
+rusty-bookstore-schema = { path = "../rusty-bookstore-schema", features = ["backend"] }

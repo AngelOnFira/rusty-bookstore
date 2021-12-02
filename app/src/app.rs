@@ -1,46 +1,46 @@
 use reqwasm::http::Request;
-use rusty_bookstore_schema::schema::books_book as book;
+// use rusty_bookstore_schema::schema::books_book as book;
 use yew::prelude::*;
 use yew::{function_component, html};
 use yewprint::Button;
 
 #[function_component(App)]
 pub fn app() -> Html {
-    let books = use_state(|| vec![]);
-    {
-        let books = books.clone();
-        use_effect_with_deps(
-            move |_| {
-                let books = books.clone();
-                wasm_bindgen_futures::spawn_local(async move {
-                    let fetched_books: Vec<book::Model> = Request::get("localhost:3000/books")
-                        .send()
-                        .await
-                        .unwrap()
-                        .json()
-                        .await
-                        .unwrap();
-                    books.set(fetched_books);
-                });
-                || ()
-            },
-            (),
-        );
-    }
+    // let books = use_state(|| vec![]);
+    // {
+    //     let books = books.clone();
+    //     use_effect_with_deps(
+    //         move |_| {
+    //             let books = books.clone();
+    //             wasm_bindgen_futures::spawn_local(async move {
+    //                 let fetched_books: Vec<book::Model> = Request::get("localhost:3000/books")
+    //                     .send()
+    //                     .await
+    //                     .unwrap()
+    //                     .json()
+    //                     .await
+    //                     .unwrap();
+    //                 books.set(fetched_books);
+    //             });
+    //             || ()
+    //         },
+    //         (),
+    //     );
+    // }
 
-    let books = books
-        .iter()
-        .map(|book| {
-            html! {
-                <p>{format!("{}: {}", book.name, book.price)}</p>
-            }
-        })
-        .collect::<Html>();
+    // let books = books
+    //     .iter()
+    //     .map(|book| {
+    //         html! {
+    //             <p>{format!("{}: {}", book.name, book.price)}</p>
+    //         }
+    //     })
+    //     .collect::<Html>();
 
     html! {
         <>
         <div>
-        { books }
+        { "books" }
         </div>
         </>
     }
