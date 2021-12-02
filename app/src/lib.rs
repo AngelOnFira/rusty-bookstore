@@ -19,7 +19,7 @@ pub fn run_app() -> Result<(), JsValue> {
     #[cfg(feature = "console_error_panic_hook")]
     console_error_panic_hook::set_once();
 
-    log("Hello World!");
+    // log("Hello World!");
     yew::start_app::<app::App>();
 
     Ok(())

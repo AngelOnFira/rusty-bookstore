@@ -19,7 +19,11 @@ yewprint-css = "0.1.0"
 
 [workspace]
 # Our actual web app
-members = ["app", "backend"]
+members = [
+    "app",
+    "rusty-bookstore-backend",
+    "rusty-bookstore-schema"
+]
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
