@@ -5,7 +5,7 @@ use yew::{function_component, html};
 use yewprint::Button;
 
 #[function_component(App)]
-fn app() -> Html {
+pub fn app() -> Html {
     let books = use_state(|| vec![]);
     {
         let books = books.clone();
@@ -26,16 +26,16 @@ fn app() -> Html {
             },
             (),
         );
-
-        let books = books
-            .iter()
-            .map(|book| {
-                html! {
-                    <p>{format!("{}: {}", book.name, book.price)}</p>
-                }
-            })
-            .collect::<Html>();
     }
+
+    let books = books
+        .iter()
+        .map(|book| {
+            html! {
+                <p>{format!("{}: {}", book.name, book.price)}</p>
+            }
+        })
+        .collect::<Html>();
 
     html! {
         <>
