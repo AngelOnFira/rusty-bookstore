@@ -7,8 +7,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-getrandom = { version = "=0.2.3", features = ["js"] }
-indexmap = "=1.6.2"
+# getrandom = { version = "=0.2.3", features = ["js"] }
+# indexmap = "=1.6.2"
 
 # Package for Rust and WASM
 wasm-run = "0.9"
