@@ -1,5 +1,5 @@
 use rusty_bookstore_schema::schema::books_book as book;
-use sea_orm::{Database, DatabaseConnection, EntityTrait, PaginatorTrait};
+use sea_orm::{Database, DatabaseConnection, EntityTrait};
 use warp::Filter;
 
 #[tokio::main]
