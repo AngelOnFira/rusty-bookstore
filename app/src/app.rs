@@ -74,8 +74,13 @@ impl Component for App {
     type Message = ();
     type Properties = ExampleProps;
 
-    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        let backend_fetch = BackendFetchService { books: None };
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let backend_fetch = BackendFetchService {
+            books: None,
+            fetch_task: None,
+            link: ComponentLink,
+            error: None,
+        };
 
         App {
             props,
@@ -154,8 +159,29 @@ pub struct BackendFetchService {
 
 #[derive(Debug)]
 pub enum Msg {
-    GetLocation,
+    GetBooks,
     ReceiveResponse(Result<Vec<book::Model>, anyhow::Error>),
+}
+
+impl BackendFetchService {
+    fn view_iss_location(&self) -> Html {
+        match self.books {
+            Some(ref books) => {
+                html! {
+                    <>
+                        { books.iter().map(|book| BookCover { props: BookProps {book: *book}}.view() ).collect::<Html>() }
+                    </>
+                }
+            }
+            None => {
+                html! {
+                     <button onclick=self.link.callback(|_| Msg::GetBooks)>
+                         { "Loading books" }
+                     </button>
+                }
+            }
+        }
+    }
 }
 
 impl Component for BackendFetchService {
@@ -212,8 +238,7 @@ impl Component for BackendFetchService {
         }
     }
     fn view(&self) -> Html {
-        html! {
-        }
+        html! {}
     }
 }
 

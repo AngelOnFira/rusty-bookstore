@@ -24,13 +24,12 @@ console_error_panic_hook = { version = "0.1.6", optional = true }
 # Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
 wee_alloc = { version = "0.4.5", optional = true }
 
-yew = "0.18"
+yew = { git = "https://github.com/yewstack/yew" }
 yewprint = "0.1"
 material-yew = "0.1"
 web-sys = { version = "0.3", features = ["Window", "MediaQueryList"] }
 
 anyhow = "1"
-
 reqwasm = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 wasm-bindgen-futures = "0.4"
