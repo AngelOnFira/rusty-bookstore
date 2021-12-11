@@ -13,7 +13,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         async move { warp::reply::json(&book::Entity::find().all(&db_clone).await.unwrap()) }
     });
 
-    let routes = warp::get().and(books);
+    let cors = warp::cors().allow_any_origin();
+    let routes = warp::get().and(books).with(cors);
 
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 
