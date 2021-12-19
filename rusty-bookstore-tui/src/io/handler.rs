@@ -1,5 +1,4 @@
 use std::sync::Arc;
-use std::time::Duration;
 
 use eyre::Result;
 use log::{error, info};
@@ -9,7 +8,7 @@ use crate::app::state::AppState;
 use crate::app::App;
 
 use rusty_bookstore_schema::schema::books_book as book;
-use sea_orm::{Database, DatabaseConnection, EntityTrait};
+use sea_orm::{Database, EntityTrait};
 
 /// In the IO thread, we handle IO event without blocking the UI thread
 pub struct IoAsyncHandler {
@@ -25,7 +24,7 @@ impl IoAsyncHandler {
     pub async fn handle_io_event(&mut self, io_event: IoEvent) {
         let result = match io_event {
             IoEvent::Initialize => self.do_initialize().await,
-            IoEvent::Sleep(duration) => self.do_sleep(duration).await,
+            IoEvent::GetBooks => self.do_get_books().await,
         };
 
         if let Err(err) = result {
@@ -49,19 +48,7 @@ impl IoAsyncHandler {
         Ok(())
     }
 
-    /// Just take a little break
-    async fn do_sleep(&mut self, duration: Duration) -> Result<()> {
-        info!("😴 Go sleeping for {:?}...", duration);
-        tokio::time::sleep(duration).await;
-        info!("⏰ Wake up !");
-        // Notify the app for having slept
-        let mut app = self.app.lock().await;
-        app.slept();
-
-        Ok(())
-    }
-
-    pub async fn get_books(&mut self) -> Result<()> {
+    pub async fn do_get_books(&mut self) -> Result<()> {
         if let AppState::Initialized { db, books, .. } = self.app.lock().await.state_mut() {
             let books_query = &book::Entity::find().all(db).await?;
             *books = books_query.to_vec();

@@ -1,5 +1,5 @@
 use rusty_bookstore_schema::schema::books_book as book;
-use sea_orm::{Database, DatabaseConnection, EntityTrait};
+use sea_orm::DatabaseConnection;
 use std::time::Duration;
 
 #[derive(Clone)]
@@ -82,6 +82,14 @@ impl AppState {
             // Set the duration, note that the duration is in 1s..10s
             let secs = (duration.as_secs() - 1).clamp(1, 10);
             *duration = Duration::from_secs(secs);
+        }
+    }
+
+    pub fn books(&self) -> Option<&Vec<book::Model>> {
+        if let Self::Initialized { books, .. } = self {
+            Some(books)
+        } else {
+            None
         }
     }
 }

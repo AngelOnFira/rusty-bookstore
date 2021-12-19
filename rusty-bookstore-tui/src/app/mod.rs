@@ -29,7 +29,7 @@ pub struct App {
 }
 
 impl App {
-    pub async fn new(io_tx: tokio::sync::mpsc::Sender<IoEvent>) -> Self {
+    pub fn new(io_tx: tokio::sync::mpsc::Sender<IoEvent>) -> Self {
         let actions = vec![Action::Quit].into();
         let is_loading = false;
         let state = AppState::default();
@@ -48,11 +48,8 @@ impl App {
             debug!("Run action [{:?}]", action);
             match action {
                 Action::Quit => AppReturn::Exit,
-                Action::Sleep => {
-                    if let Some(duration) = self.state.duration().cloned() {
-                        // Sleep is an I/O action, we dispatch on the IO channel that's run on another thread
-                        self.dispatch(IoEvent::Sleep(duration)).await
-                    }
+                Action::Refresh => {
+                    self.dispatch(IoEvent::GetBooks).await;
                     AppReturn::Continue
                 }
                 // IncrementDelay and DecrementDelay is handled in the UI thread
@@ -104,11 +101,10 @@ impl App {
         self.is_loading
     }
 
-    pub async fn initialized(&mut self, db: DatabaseConnection) {
+    pub fn initialized(&mut self, db: DatabaseConnection) {
         // Update contextual actions
         self.actions = vec![
             Action::Quit,
-            Action::Sleep,
             Action::IncrementDelay,
             Action::DecrementDelay,
         ]

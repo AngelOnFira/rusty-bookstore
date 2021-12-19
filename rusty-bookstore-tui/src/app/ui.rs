@@ -4,7 +4,7 @@ use symbols::line;
 use tui::backend::Backend;
 use tui::layout::{Alignment, Constraint, Direction, Layout, Rect};
 use tui::style::{Color, Modifier, Style};
-use tui::text::{Span, Spans};
+use tui::text::{Span};
 use tui::widgets::{Block, BorderType, Borders, Cell, LineGauge, Paragraph, Row, Table};
 use tui::{symbols, Frame};
 use tui_logger::TuiLoggerWidget;
@@ -28,7 +28,7 @@ where
                 Constraint::Length(3),
                 Constraint::Min(10),
                 Constraint::Length(3),
-                Constraint::Length(12),
+                Constraint::Length(20),
             ]
             .as_ref(),
         )
@@ -82,38 +82,70 @@ fn check_size(rect: &Rect) {
     }
 }
 
-fn draw_body<'a>(loading: bool, state: &AppState) -> Paragraph<'a> {
-    let initialized_text = if state.is_initialized() {
-        "Initialized"
+fn draw_body<'a>(_loading: bool, state: &AppState) -> Table<'a> {
+    // let initialized_text = if state.is_initialized() {
+    //     "Initialized"
+    // } else {
+    //     "Not Initialized !"
+    // };
+    // let loading_text = if loading { "Loading..." } else { "" };
+    // let sleep_text = if let Some(sleeps) = state.count_sleep() {
+    //     format!("Sleep count: {}", sleeps)
+    // } else {
+    //     String::default()
+    // };
+    // let tick_text = if let Some(ticks) = state.count_tick() {
+    //     format!("Tick count: {}", ticks)
+    // } else {
+    //     String::default()
+    // };
+
+    let books = if let Some(books) = state.books() {
+        let mut rows = Vec::new();
+        rows.push(Row::new(vec![
+            Cell::from("ID"),
+            Cell::from("Title"),
+            Cell::from("Author"),
+            Cell::from("Price"),
+        ]));
+        for book in books {
+            rows.push(Row::new(vec![
+                Cell::from(book.name.to_string()),
+                Cell::from(book.isbn.to_string()),
+                Cell::from(book.price.to_string()),
+            ]));
+        }
+        Table::new(rows)
     } else {
-        "Not Initialized !"
+        Table::new(vec![Row::new(vec![Cell::from("No books found")])])
     };
-    let loading_text = if loading { "Loading..." } else { "" };
-    let sleep_text = if let Some(sleeps) = state.count_sleep() {
-        format!("Sleep count: {}", sleeps)
-    } else {
-        String::default()
-    };
-    let tick_text = if let Some(ticks) = state.count_tick() {
-        format!("Tick count: {}", ticks)
-    } else {
-        String::default()
-    };
-    Paragraph::new(vec![
-        Spans::from(Span::raw(initialized_text)),
-        Spans::from(Span::raw(loading_text)),
-        Spans::from(Span::raw(sleep_text)),
-        Spans::from(Span::raw(tick_text)),
-    ])
-    .style(Style::default().fg(Color::LightCyan))
-    .alignment(Alignment::Left)
-    .block(
-        Block::default()
-            // .title("Body")
-            .borders(Borders::ALL)
-            .style(Style::default().fg(Color::White))
-            .border_type(BorderType::Plain),
-    )
+
+    return books
+        .style(Style::default().fg(Color::LightCyan))
+        // .alignment(Alignment::Left)
+        .block(
+            Block::default()
+                // .title("Body")
+                .borders(Borders::ALL)
+                .style(Style::default().fg(Color::White))
+                .border_type(BorderType::Plain),
+        );
+
+    // Paragraph::new(vec![
+    //     Spans::from(Span::raw(initialized_text)),
+    //     Spans::from(Span::raw(loading_text)),
+    //     Spans::from(Span::raw(sleep_text)),
+    //     Spans::from(Span::raw(tick_text)),
+    // ])
+    // .style(Style::default().fg(Color::LightCyan))
+    // .alignment(Alignment::Left)
+    // .block(
+    //     Block::default()
+    //         // .title("Body")
+    //         .borders(Borders::ALL)
+    //         .style(Style::default().fg(Color::White))
+    //         .border_type(BorderType::Plain),
+    // )
 }
 
 fn draw_duration(duration: &Duration) -> LineGauge {
