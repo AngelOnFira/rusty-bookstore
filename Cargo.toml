@@ -24,7 +24,8 @@ yewprint-css = "0.1.0"
 members = [
     "app",
     "rusty-bookstore-backend",
-    "rusty-bookstore-schema"
+    "rusty-bookstore-schema",
+    "rusty-bookstore-tui",
 ]
 
 [profile.release]

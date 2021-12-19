@@ -4,7 +4,7 @@ use reqwasm::http::Request;
 use rusty_bookstore_schema::schema::books_book as book;
 use yew::html;
 use yew::prelude::*;
-// use yewprint::{Card};
+use yewprint::{Card};
 
 use serde::Deserialize;
 
@@ -58,15 +58,15 @@ pub fn app() -> Html {
 }
 
 #[derive(Properties, PartialEq)]
-pub struct CardProps {
+pub struct BookCardProps {
     pub title: String,
 }
 
-#[function_component(Card)]
-pub fn card(props: &CardProps) -> Html {
+#[function_component(BookCard)]
+pub fn card(props: &BookCardProps) -> Html {
     html! {
-        // <Card>
-        //     <p> { "Hello, world!" } </p>
-        // </Card>
+        <Card>
+            <p> { "Hello, world!" } </p>
+        </Card>
     }
 }

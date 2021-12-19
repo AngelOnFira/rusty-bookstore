@@ -1,0 +1,21 @@
+[package]
+name = "rusty-bookstore-tui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tui = { version = "0.15", features = ["crossterm"], default-features = false }
+crossterm = "0.19"
+
+tokio = { version = "1", features = ["full"] }
+eyre = "0.6"
+
+log = "0.4" 
+tui-logger = { git = "https://github.com/gin66/tui-logger", rev = "3a3568e2464dddc2205e071234135998342d7f1d" }
+
+sea-orm = { version = "^0", features = [ "runtime-tokio-rustls", "macros", "with-chrono", "sqlx-postgres" ], default-features = false }
+warp = "0.3"
+
+rusty-bookstore-schema = { path = "../rusty-bookstore-schema", features = ["backend"] }
