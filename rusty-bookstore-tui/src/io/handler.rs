@@ -8,7 +8,7 @@ use crate::app::state::AppState;
 use crate::app::App;
 
 use rusty_bookstore_schema::schema::books_book as book;
-use sea_orm::{Database, EntityTrait};
+use sea_orm::{Database, EntityTrait, PaginatorTrait};
 
 /// In the IO thread, we handle IO event without blocking the UI thread
 pub struct IoAsyncHandler {
@@ -50,7 +50,11 @@ impl IoAsyncHandler {
 
     pub async fn do_get_books(&mut self) -> Result<()> {
         if let AppState::Initialized { db, books, .. } = self.app.lock().await.state_mut() {
-            let books_query = &book::Entity::find().all(db).await?;
+            let books_query = &book::Entity::find()
+                .paginate(db, 30)
+                .fetch_and_next()
+                .await?
+                .unwrap();
             *books = books_query.to_vec();
         }
         Ok(())

@@ -4,7 +4,7 @@ use symbols::line;
 use tui::backend::Backend;
 use tui::layout::{Alignment, Constraint, Direction, Layout, Rect};
 use tui::style::{Color, Modifier, Style};
-use tui::text::{Span};
+use tui::text::{Span, Spans};
 use tui::widgets::{Block, BorderType, Borders, Cell, LineGauge, Paragraph, Row, Table};
 use tui::{symbols, Frame};
 use tui_logger::TuiLoggerWidget;
@@ -100,14 +100,56 @@ fn draw_body<'a>(_loading: bool, state: &AppState) -> Table<'a> {
     //     String::default()
     // };
 
+    Table::new(vec![
+        // Row can be created from simple strings.
+        Row::new(vec!["Row11", "Row12", "Row13"]),
+        // You can style the entire row.
+        Row::new(vec!["Row21", "Row22", "Row23"]).style(Style::default().fg(Color::Blue)),
+        // If you need more control over the styling you may need to create Cells directly
+        Row::new(vec![
+            Cell::from("Row31"),
+            Cell::from("Row32").style(Style::default().fg(Color::Yellow)),
+            Cell::from(Spans::from(vec![
+                Span::raw("Row"),
+                Span::styled("33", Style::default().fg(Color::Green)),
+            ])),
+        ]),
+        // If a Row need to display some content over multiple lines, you just have to change
+        // its height.
+        Row::new(vec![
+            Cell::from("Row\n41"),
+            Cell::from("Row\n42"),
+            Cell::from("Row\n43"),
+        ])
+        .height(2),
+    ])
+    // You can set the style of the entire Table.
+    .style(Style::default().fg(Color::White))
+    // It has an optional header, which is simply a Row always visible at the top.
+    .header(
+        Row::new(vec!["Col1", "Col2", "Col3"])
+            .style(Style::default().fg(Color::Yellow))
+            // If you want some space between the header and the rest of the rows, you can always
+            // specify some margin at the bottom.
+            .bottom_margin(1),
+    )
+    // As any other widget, a Table can be wrapped in a Block.
+    .block(Block::default().title("Table"))
+    // Columns widths are constrained in the same way as Layout...
+    .widths(&[
+        Constraint::Length(5),
+        Constraint::Length(5),
+        Constraint::Length(10),
+    ])
+    // ...and they can be separated by a fixed spacing.
+    .column_spacing(1)
+    // If you wish to highlight a row in any specific way when it is selected...
+    .highlight_style(Style::default().add_modifier(Modifier::BOLD))
+    // ...and potentially show a symbol in front of the selection.
+    .highlight_symbol(">>");
+
     let books = if let Some(books) = state.books() {
         let mut rows = Vec::new();
-        rows.push(Row::new(vec![
-            Cell::from("ID"),
-            Cell::from("Title"),
-            Cell::from("Author"),
-            Cell::from("Price"),
-        ]));
         for book in books {
             rows.push(Row::new(vec![
                 Cell::from(book.name.to_string()),
@@ -115,21 +157,39 @@ fn draw_body<'a>(_loading: bool, state: &AppState) -> Table<'a> {
                 Cell::from(book.price.to_string()),
             ]));
         }
-        Table::new(rows)
+        Table::new(rows).header(
+            Row::new(vec![
+                Cell::from("Title"),
+                Cell::from("ISBN"),
+                Cell::from("Price"),
+            ])
+            .style(Style::default().fg(Color::Yellow))
+            // If you want some space between the header and the rest of the rows, you can always
+            // specify some margin at the bottom.
+            .bottom_margin(1),
+        )
     } else {
         Table::new(vec![Row::new(vec![Cell::from("No books found")])])
     };
 
     return books
-        .style(Style::default().fg(Color::LightCyan))
-        // .alignment(Alignment::Left)
-        .block(
-            Block::default()
-                // .title("Body")
-                .borders(Borders::ALL)
-                .style(Style::default().fg(Color::White))
-                .border_type(BorderType::Plain),
-        );
+        // You can set the style of the entire Table.
+        .style(Style::default().fg(Color::White))
+        // It has an optional header, which is simply a Row always visible at the top.
+        // As any other widget, a Table can be wrapped in a Block.
+        .block(Block::default().title("Books"))
+        // Columns widths are constrained in the same way as Layout...
+        .widths(&[
+            Constraint::Length(30),
+            Constraint::Length(10),
+            Constraint::Length(5),
+        ])
+        // ...and they can be separated by a fixed spacing.
+        .column_spacing(4)
+        // If you wish to highlight a row in any specific way when it is selected...
+        .highlight_style(Style::default().add_modifier(Modifier::BOLD))
+        // ...and potentially show a symbol in front of the selection.
+        .highlight_symbol(">>");
 
     // Paragraph::new(vec![
     //     Spans::from(Span::raw(initialized_text)),
