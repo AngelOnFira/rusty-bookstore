@@ -9,8 +9,8 @@ use crate::inputs::key::Key;
 pub enum Action {
     Quit,
     Refresh,
-    IncrementDelay,
-    DecrementDelay,
+    PreviousBook,
+    NextBook,
 }
 
 impl Action {
@@ -19,8 +19,8 @@ impl Action {
         static ACTIONS: [Action; 4] = [
             Action::Quit,
             Action::Refresh,
-            Action::IncrementDelay,
-            Action::DecrementDelay,
+            Action::PreviousBook,
+            Action::NextBook,
         ];
         ACTIONS.iter()
     }
@@ -30,8 +30,8 @@ impl Action {
         match self {
             Action::Quit => &[Key::Ctrl('c'), Key::Char('q')],
             Action::Refresh => &[Key::Char('r')],
-            Action::IncrementDelay => &[Key::Char('+')],
-            Action::DecrementDelay => &[Key::Char('-')],
+            Action::PreviousBook => &[Key::Up],
+            Action::NextBook => &[Key::Down],
         }
     }
 }
@@ -42,8 +42,8 @@ impl Display for Action {
         let str = match self {
             Action::Quit => "Quit",
             Action::Refresh => "Refresh",
-            Action::IncrementDelay => "Increment delay",
-            Action::DecrementDelay => "Decrement delay",
+            Action::PreviousBook => "Previous Book",
+            Action::NextBook => "Next Book",
         };
         write!(f, "{}", str)
     }
@@ -131,8 +131,8 @@ mod tests {
         let _actions: Actions = vec![
             Action::Quit,
             Action::Refresh,
-            Action::IncrementDelay,
-            Action::DecrementDelay,
+            Action::PreviousBook,
+            Action::NextBook,
         ]
         .into();
     }
@@ -142,12 +142,12 @@ mod tests {
     fn should_panic_when_create_actions_conflict_key() {
         let _actions: Actions = vec![
             Action::Quit,
-            Action::DecrementDelay,
+            Action::NextBook,
             Action::Refresh,
-            Action::IncrementDelay,
-            Action::IncrementDelay,
+            Action::PreviousBook,
+            Action::PreviousBook,
             Action::Quit,
-            Action::DecrementDelay,
+            Action::NextBook,
         ]
         .into();
     }

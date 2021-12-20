@@ -1,6 +1,7 @@
 use rusty_bookstore_schema::schema::books_book as book;
 use sea_orm::DatabaseConnection;
 use std::time::Duration;
+use tui::widgets::TableState;
 
 #[derive(Clone)]
 pub enum AppState {
@@ -11,6 +12,7 @@ pub enum AppState {
         counter_tick: u64,
         db: DatabaseConnection,
         books: Vec<book::Model>,
+        books_tablestate: TableState,
     },
 }
 
@@ -26,6 +28,7 @@ impl AppState {
             counter_tick,
             db: db,
             books: Vec::new(),
+            books_tablestate: TableState::default(),
         }
     }
 
@@ -90,6 +93,36 @@ impl AppState {
             Some(books)
         } else {
             None
+        }
+    }
+
+    pub fn next_book(&mut self) {
+        if let Self::Initialized {
+            books_tablestate,
+            books,
+            ..
+        } = self
+        {
+            let mut new_pos = books_tablestate.selected().unwrap_or(0) as i32 + 1;
+            if new_pos >= books.len() as i32 {
+                new_pos = 0;
+            }
+            books_tablestate.select(Some(new_pos as usize));
+        }
+    }
+
+    pub fn previous_book(&mut self) {
+        if let Self::Initialized {
+            books_tablestate,
+            books,
+            ..
+        } = self
+        {
+            let mut new_pos = books_tablestate.selected().unwrap_or(0) as i32 - 1;
+            if new_pos < 0 {
+                new_pos = books.len() as i32 - 1;
+            }
+            books_tablestate.select(Some(new_pos as usize));
         }
     }
 }

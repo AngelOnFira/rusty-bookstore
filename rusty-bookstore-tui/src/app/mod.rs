@@ -52,14 +52,14 @@ impl App {
                     self.dispatch(IoEvent::GetBooks).await;
                     AppReturn::Continue
                 }
-                // IncrementDelay and DecrementDelay is handled in the UI thread
-                Action::IncrementDelay => {
-                    self.state.increment_delay();
+                // PreviousBook and NextBook is handled in the UI thread
+                Action::PreviousBook => {
+                    self.state.previous_book();
                     AppReturn::Continue
                 }
                 // Note, that we clamp the duration, so we stay >= 0
-                Action::DecrementDelay => {
-                    self.state.decrement_delay();
+                Action::NextBook => {
+                    self.state.next_book();
                     AppReturn::Continue
                 }
             }
@@ -105,8 +105,9 @@ impl App {
         // Update contextual actions
         self.actions = vec![
             Action::Quit,
-            Action::IncrementDelay,
-            Action::DecrementDelay,
+            Action::Refresh,
+            Action::PreviousBook,
+            Action::NextBook,
         ]
         .into();
         self.state = AppState::initialized(db)
