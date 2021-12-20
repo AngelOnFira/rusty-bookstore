@@ -25,9 +25,8 @@ where
         .direction(Direction::Vertical)
         .constraints(
             [
-                Constraint::Length(3),
-                Constraint::Min(10),
-                Constraint::Length(3),
+                Constraint::Length(3), // Title
+                Constraint::Min(10),   // Book table
                 Constraint::Length(20),
             ]
             .as_ref(),
@@ -55,15 +54,9 @@ where
     let help = draw_help(app.actions());
     rect.render_widget(help, body_chunks[1]);
 
-    // Duration LineGauge
-    if let Some(duration) = app.state().duration() {
-        let duration_block = draw_duration(duration);
-        rect.render_widget(duration_block, chunks[2]);
-    }
-
     // Logs
     let logs = draw_logs();
-    rect.render_widget(logs, chunks[3]);
+    rect.render_widget(logs, chunks[2]);
 }
 
 fn draw_title<'a>() -> Paragraph<'a> {
@@ -130,27 +123,6 @@ fn draw_body<'a>(_loading: bool, state: &AppState) -> Table<'a> {
         .highlight_style(Style::default().add_modifier(Modifier::BOLD))
         // ...and potentially show a symbol in front of the selection.
         .highlight_symbol(">>");
-}
-
-fn draw_duration(duration: &Duration) -> LineGauge {
-    let sec = duration.as_secs();
-    let label = format!("{}s", sec);
-    let ratio = sec as f64 / 10.0;
-    LineGauge::default()
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .title("Sleep duration"),
-        )
-        .gauge_style(
-            Style::default()
-                .fg(Color::Cyan)
-                .bg(Color::Black)
-                .add_modifier(Modifier::BOLD),
-        )
-        .line_set(line::THICK)
-        .label(label)
-        .ratio(ratio)
 }
 
 fn draw_help(actions: &Actions) -> Table {

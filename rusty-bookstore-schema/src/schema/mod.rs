@@ -2,4 +2,10 @@
 
 pub mod prelude;
 
+pub mod books_author;
+pub mod books_basket;
 pub mod books_book;
+pub mod books_genre;
+pub mod books_order;
+pub mod books_patron;
+pub mod books_publisher;

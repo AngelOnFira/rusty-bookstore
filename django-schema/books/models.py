@@ -78,15 +78,6 @@ from django.db import models
 # 3. ISBN
 # 4. Genre
 
-class Book(models.Model):
-    name = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.IntegerField()
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -95,21 +86,66 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
-# class Basket(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     books = models.ManyToManyField(Book)
-#     quantity = models.IntegerField()
 
-#     def __str__(self):
-#         return self.book.name
+class Genre(models.Model):
+    name = models.CharField(max_length=100)
 
-# class Order(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     order_number = models.IntegerField()
-#     date = models.DateField()
-#     shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.CASCADE)
-#     billing_address = models.ForeignKey(BillingAddress, on_delete=models.CASCADE)
-#     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
-#     def __str__(self):
-#         return self.order_number
+
+class Publisher(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Book(models.Model):
+    name = models.CharField(max_length=100)
+    authors = models.ManyToManyField(Author)
+    isbn = models.CharField(max_length=100)
+
+    page_count = models.IntegerField(default=0)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, null=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+class Patron(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Basket(models.Model):
+    books = models.ManyToManyField(Book)
+    user = models.ForeignKey(Patron, on_delete=models.CASCADE)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.user.username
+
+class Order(models.Model):
+    user = models.ForeignKey(Patron, on_delete=models.CASCADE)
+    order_number = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
+
+# Reduce to a relation schema
+
+# author (id, name, bio)
+# genre (id, name)
+# publisher (id, name)
+# author_book (id, author_id, book_id)
+# book (id, name, author_book_id, isbn, page_count, genre_id, publisher_id, price)
+# patron (id, name, email, phone, address)
+# book_basket (id, book_id, user_id)
+# basket (id, book_basket_id, user_id, total_price)
+# order (id, user_id, order_number)
